@@ -1,5 +1,5 @@
 type Query {
-    job: Job
+    job(id: ID!): Job
     jobs: [Job!]
 }
 

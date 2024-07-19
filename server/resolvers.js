@@ -1,14 +1,12 @@
-import { getJobs } from "./db/jobs.js";
+import { getJobs, getJob } from "./db/jobs.js";
 import { getCompany } from "./db/companies.js";
 
 export const resolvers = {
     Query: {
-        job: () => {
-            return {
-                title: 'Senior Engineer',
-                description: 'A senior full stack engineer',
-                id: 'test-id'
-            };
+        job: (_root, args) => {
+            // console.log(args);
+            const { id } = args;
+            return getJob(id);
         },
         jobs: async () => {
             return await getJobs();
