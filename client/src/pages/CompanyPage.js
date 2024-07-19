@@ -1,5 +1,4 @@
 import { useParams } from 'react-router';
-import { companies } from '../lib/fake-data';
 import { useEffect, useState } from 'react';
 import { getCompany } from '../lib/graphql/queries';
 
@@ -13,7 +12,7 @@ function CompanyPage() {
 
   // const company = companies.find((company) => company.id === companyId);
   if (!company) {
-    return <div></div>
+    return <div>Loading...</div>
   }
 
   return (
