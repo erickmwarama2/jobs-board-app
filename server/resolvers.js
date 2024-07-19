@@ -11,6 +11,10 @@ export const resolvers = {
         jobs: async () => {
             return await getJobs();
         },
+        company: (_root, args) => {
+            const { id } = args;
+            return getCompany(id);
+        }
     },
     Job: {
         date: (job) => toIsoDate(job.createdAt),
