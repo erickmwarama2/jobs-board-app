@@ -1,0 +1,22 @@
+type Query {
+    job: Job
+    jobs: [Job!]
+}
+
+"""
+This __Job__ class represents a job object
+"""
+type Job {
+    id: ID!
+    title: String!
+    description: String
+    """This is the __date__ field, in ISO-8601 format e.g. `2024-07-18`"""
+    date: String!
+    company: Company!
+}
+
+type Company {
+    id: ID!
+    name: String!
+    description: String
+}
