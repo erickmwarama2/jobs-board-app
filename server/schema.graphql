@@ -4,6 +4,15 @@ type Query {
     company(id: ID!): Company
 }
 
+type Mutation {
+    createJob(input: CreateJobInput!): Job
+}
+
+input CreateJobInput {
+    title: String!
+    description: String
+}
+
 """
 This __Job__ class represents a job object
 """
