@@ -10,7 +10,7 @@ function JobPage() {
 
   useEffect(() => {
     getJob(jobId).then(setJob);
-  }, []);
+  }, [jobId]);
 
   // const job = jobs.find((job) => job.id === jobId);
   if (!job) {
