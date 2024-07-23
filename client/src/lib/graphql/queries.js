@@ -30,6 +30,14 @@ const apolloClient = new ApolloClient({
   // uri: "http://localhost:9000/graphql",
   link: concat(customLink, httpLink),
   cache: new InMemoryCache(),
+  defaultOptions: {
+    query: {
+      fetchPolicy: "cache-first",
+    },
+    watchQuery: {
+      fetchPolicy: "network-only",
+    },
+  },
   devtools: {
     enabled: true,
   },
@@ -48,6 +56,21 @@ const apolloClient = new ApolloClient({
 //   },
 // });
 
+const jobByIdQuery = gql`
+  query JobsById($id: ID!) {
+    job(id: $id) {
+      id
+      date
+      title
+      description
+      company {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export async function createJob({ title, description }) {
   const mutation = gql`
     mutation createJob($input: CreateJobInput!) {
@@ -65,29 +88,26 @@ export async function createJob({ title, description }) {
     variables: {
       input: { title, description },
     },
+    update: (cache, result) => {
+      cache.writeQuery({
+        query: jobByIdQuery,
+        variables: {
+          id: result.data.job.id,
+        },
+        data: result.data,
+      });
+    },
   });
   const { job } = result.data;
   return job;
 }
 
 export async function getJob(id) {
-  const query = gql`
-    query JobsById($id: ID!) {
-      job(id: $id) {
-        id
-        date
-        title
-        description
-        company {
-          id
-          name
-        }
-      }
-    }
-  `;
-
   // const { job } = await client.request(query, { id });
-  const result = await apolloClient.query({ query, variables: { id } });
+  const result = await apolloClient.query({
+    query: jobByIdQuery,
+    variables: { id },
+  });
   const { job } = result.data;
   return job;
 }
