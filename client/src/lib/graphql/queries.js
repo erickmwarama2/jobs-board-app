@@ -26,7 +26,7 @@ const customLink = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-const apolloClient = new ApolloClient({
+export const apolloClient = new ApolloClient({
   // uri: "http://localhost:9000/graphql",
   link: concat(customLink, httpLink),
   cache: new InMemoryCache(),
@@ -59,13 +59,13 @@ const apolloClient = new ApolloClient({
 const jobDetailFragment = gql`
   fragment JobDetail on Job {
     id
-      date
-      title
-      description
-      company {
-        id
-        name
-      }
+    date
+    title
+    description
+    company {
+      id
+      name
+    }
   }
 `;
 
@@ -120,24 +120,28 @@ export async function getJob(id) {
   return job;
 }
 
-export async function getCompany(id) {
-  const query = gql`
-    query GetCompany($id: ID!) {
-      company(id: $id) {
+export const companyByIdQuery = gql`
+  query GetCompany($id: ID!) {
+    company(id: $id) {
+      id
+      name
+      description
+      jobs {
         id
-        name
+        title
         description
-        jobs {
-          id
-          title
-          description
-          date
-        }
+        date
       }
     }
-  `;
+  }
+`;
+
+export async function getCompany(id) {
   // const { company } = await client.request(query, { id });
-  const result = await apolloClient.query({ query, variables: { id } });
+  const result = await apolloClient.query({
+    query: companyByIdQuery,
+    variables: { id },
+  });
   const { company } = result.data;
   return company;
 }
