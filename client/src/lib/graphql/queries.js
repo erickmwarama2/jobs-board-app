@@ -78,8 +78,7 @@ export const jobByIdQuery = gql`
   ${jobDetailFragment}
 `;
 
-export async function createJob({ title, description }) {
-  const mutation = gql`
+export const createJobMutation = gql`
     mutation createJob($input: CreateJobInput!) {
       job: createJob(input: $input) {
         ...JobDetail
@@ -88,11 +87,12 @@ export async function createJob({ title, description }) {
     ${jobDetailFragment}
   `;
 
+export async function createJob({ title, description }) {
   // const { job } = await client.request(mutation, {
   //   input: { title, description },
   // });
   const result = await apolloClient.mutate({
-    mutation,
+    mutation: createJobMutation,
     variables: {
       input: { title, description },
     },
