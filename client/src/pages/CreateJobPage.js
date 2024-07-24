@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { createJob, createJobMutation } from '../lib/graphql/queries';
+// import { createJob, createJobMutation } from '../lib/graphql/queries';
 import { useNavigate } from 'react-router';
-import { useMutation } from '@apollo/client';
-import { jobByIdQuery } from '../lib/graphql/queries';
+import { useCreateJob } from '../lib/graphql/hooks';
+// import { useMutation } from '@apollo/client';
+// import { jobByIdQuery } from '../lib/graphql/queries';
 
 function CreateJobPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const navigator = useNavigate();
+  const { createJob, loading } = useCreateJob();
 
-  const [mutate] = useMutation(createJobMutation);
+  // const [mutate, { loading }] = useMutation(createJobMutation);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -17,23 +19,25 @@ function CreateJobPage() {
 
     // const job = await createJob({title, description});
 
-    const { data: { job }} = await mutate({
-      variables: {
-        input: {
-          title,
-          description,
-        }
-      },
-      update: (cache, result) => {
-        cache.writeQuery({
-          query: jobByIdQuery,
-          variables: {
-            id: result.data.job.id,
-          },
-          data: result.data,
-        });
-      },
-    });
+    // const { data: { job }} = await mutate({
+    //   variables: {
+    //     input: {
+    //       title,
+    //       description,
+    //     }
+    //   },
+    //   update: (cache, result) => {
+    //     cache.writeQuery({
+    //       query: jobByIdQuery,
+    //       variables: {
+    //         id: result.data.job.id,
+    //       },
+    //       data: result.data,
+    //     });
+    //   },
+    // });
+
+    const job = await createJob(title, description);
 
     console.log('returned job', job);
 
@@ -69,7 +73,7 @@ function CreateJobPage() {
           </div>
           <div className="field">
             <div className="control">
-              <button className="button is-link" onClick={handleSubmit}>
+              <button disabled={loading} className="button is-link" onClick={handleSubmit}>
                 Submit
               </button>
             </div>
