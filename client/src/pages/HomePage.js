@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 import JobList from '../components/JobList';
 import { useJobs } from '../lib/graphql/hooks.js';
 
