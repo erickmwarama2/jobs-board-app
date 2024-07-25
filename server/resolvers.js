@@ -21,8 +21,8 @@ export const resolvers = {
       }
       return job;
     },
-    jobs: async () => {
-      return await getJobs();
+    jobs: async (_root, { limit, offset }) => {
+      return await getJobs(limit, offset);
     },
     company: async (_root, args) => {
       const { id } = args;
