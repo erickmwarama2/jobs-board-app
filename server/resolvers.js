@@ -6,7 +6,7 @@ import {
   deleteJob,
   updateJob,
 } from "./db/jobs.js";
-import { getCompany } from "./db/companies.js";
+import { companyLoader, getCompany } from "./db/companies.js";
 import { GraphQLError } from "graphql";
 
 export const resolvers = {
@@ -35,9 +35,10 @@ export const resolvers = {
   },
   Job: {
     date: (job) => toIsoDate(job.createdAt),
-    company: async (job) => {
-      return await getCompany(job.companyId);
-    },
+    // company: async (job) => {
+    //   return await getCompany(job.companyId);
+    // },
+    company: (job) => companyLoader.load(job.companyId),
   },
   Company: {
     jobs: (company) => getJobsByCompany(company.id),
@@ -82,7 +83,7 @@ export const resolvers = {
       });
 
       if (!job) {
-        throw notFoundError('Job not found');
+        throw notFoundError("Job not found");
       }
       return job;
     },
