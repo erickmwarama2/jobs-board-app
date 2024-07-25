@@ -79,13 +79,13 @@ export const jobByIdQuery = gql`
 `;
 
 export const createJobMutation = gql`
-    mutation createJob($input: CreateJobInput!) {
-      job: createJob(input: $input) {
-        ...JobDetail
-      }
+  mutation createJob($input: CreateJobInput!) {
+    job: createJob(input: $input) {
+      ...JobDetail
     }
-    ${jobDetailFragment}
-  `;
+  }
+  ${jobDetailFragment}
+`;
 
 export async function createJob({ title, description }) {
   // const { job } = await client.request(mutation, {
@@ -147,14 +147,17 @@ export async function getCompany(id) {
 }
 
 export const jobsQuery = gql`
-  query {
-    jobs {
-      id
-      date
-      title
-      company {
+  query Jobs($limit: Int, $offset: Int) {
+    jobs(limit: $limit, offset: $offset) {
+      totalCount
+      items {
         id
-        name
+        date
+        title
+        company {
+          id
+          name
+        }
       }
     }
   }
